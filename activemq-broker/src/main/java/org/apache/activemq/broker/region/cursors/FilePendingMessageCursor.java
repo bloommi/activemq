@@ -341,7 +341,12 @@ public class FilePendingMessageCursor extends AbstractPendingMessageCursor imple
         }
         if (!isDiskListEmpty()) {
             try {
-                getDiskList().remove(node.getMessageId().getPlistLocator());
+                Object pListLocator = node.getMessageId().getPlistLocator();
+                if (pListLocator != null) {
+                    getDiskList().remove(pListLocator);
+                } else {
+                    LOG.debug("Unable to remove message: list locator is null");
+                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
